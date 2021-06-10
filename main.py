@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import json, time, threading, random, sys
 from modules.spotify import links, xpaths
 
+import time
 
 def run(username, password, _url, _headless):
 
@@ -16,6 +17,13 @@ def run(username, password, _url, _headless):
     wait = WebDriverWait(browser, 10)
     browser.get(_url) if _url else browser.get(links["default"])
 
+    time.sleep(5)
+
+    btn = browser.find_element_by_xpath('//button[@id="onetrust-accept-btn-handler"]')
+    btn.click()
+
+    time.sleep(5)
+
     # Login with given credentials
     login_btn = wait.until(selEc.element_to_be_clickable((selBy.XPATH, xpaths["login_btn"])))
     login_btn.click()
@@ -23,8 +31,6 @@ def run(username, password, _url, _headless):
     user_form.send_keys(username)
     pass_form = wait.until(selEc.element_to_be_clickable((selBy.XPATH, xpaths["pass_form"])))
     pass_form.send_keys(password)
-    cookie_check = wait.until(selEc.element_to_be_clickable((selBy.XPATH, xpaths["cookie_check"])))
-    cookie_check.click()
     submit_btn = wait.until(selEc.element_to_be_clickable((selBy.XPATH, xpaths["submit_btn"])))
     submit_btn.click()
 
@@ -55,22 +61,12 @@ def run(username, password, _url, _headless):
     while True:
         time.sleep(random.randint(55, 70))
         song_name = wait.until(selEc.presence_of_element_located((selBy.XPATH, xpaths["song_name"]))).text
-        time_track = wait.until(selEc.presence_of_element_located((selBy.XPATH, xpaths["time_track"]))).text
-        print(" * Played {0} for {1}".format(song_name, time_track))
+        print(" * Played {0} for 3".format(song_name))
         skip_btn = wait.until(selEc.element_to_be_clickable((selBy.XPATH, xpaths["skip_btn"])))
         skip_btn.click()
 
 
 def init():
-    print(r"""
-      _____             _   _ _____       ____        _     __   ___  
-     / ____|           | | (_)  __ \     |  _ \      | |   /_ | / _ \ 
-    | (___  _ __   ___ | |_ _| |__) |   _| |_) | ___ | |_   | || | | |
-     \___ \| '_ \ / _ \| __| |  ___/ | | |  _ < / _ \| __|  | || | | |
-     ____) | |_) | (_) | |_| | |   | |_| | |_) | (_) | |_   | || |_| |
-    |_____/| .__/ \___/ \__|_|_|    \__, |____/ \___/ \__|  |_(_)___/ 
-           | |                       __/ |                            
-           |_|                      |___/""")
 
     print("\n * Bot started.")
     selUrl = input(" * Insert Spotify playlist url (empty for default): ")
